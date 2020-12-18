@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MedFragment extends Fragment {
     private String nome;
     private String cognome;
+    private String text;
     EditText name;
     FirebaseDatabase database;
     DatabaseReference reference;
