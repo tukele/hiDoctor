@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Home extends AppCompatActivity {
     private User user;
+    private int aads;
     private Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
