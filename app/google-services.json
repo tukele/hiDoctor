@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "545746645690",
+    "project_id": "hidoctor-dha",
+    "storage_bucket": "hidoctor-dha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545746645690:android:cd7bd7c556f6db50c44883",
+        "android_client_info": {
+          "package_name": "com.example.hidoctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545746645690-7occqjs6b20bo5idjbhdojqpvrkm70he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkDQk4ySvn-Co2K_NX_7gQRyeRcXkv-KA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545746645690-7occqjs6b20bo5idjbhdojqpvrkm70he.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
