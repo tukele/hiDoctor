@@ -18,7 +18,6 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent= getIntent();
         String ktm=intent.getStringExtra("id");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA"+ktm);
         setContentView(R.layout.activity_home);
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
