@@ -1,10 +1,11 @@
 package com.example.hidoctor;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ public class MedFragment extends Fragment {
     private String nome;
     private String cognome;
     private String text;
-    EditText name;
+    TextView name;
     FirebaseDatabase database;
     DatabaseReference reference;
     @Nullable
@@ -42,10 +43,11 @@ public class MedFragment extends Fragment {
         });
         reference=database.getReference().child("User").child(getArguments().getString("id")).child("cognome");
         reference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("WrongViewCast")
             @Override
             public void onDataChange(@NonNull DataSnapshot snap) {
                 cognome= snap.getValue(String.class);
-                name = (EditText) rootView.findViewById(R.id.name);
+                name = (TextView) rootView.findViewById(R.id.name);
                 name.setText(nome+" "+cognome);
             }
 
