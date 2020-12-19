@@ -3,6 +3,7 @@ package com.example.hidoctor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +11,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,15 +27,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 
 public class ProfileFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference reference;
     EditText name;
-    EditText textName;
     String usernome;
     String usercognome;
     CalendarView calendar;
+    Button salva;
+    String id;
+    long date;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +53,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        id = getArguments().getString("id");
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -52,7 +62,7 @@ public class ProfileFragment extends Fragment {
                 return false;
             }
         });
-        calendar = (CalendarView) rootView.findViewById(R.id.calendarView);
+
         database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
         reference= database.getReference().child("User").child(getArguments().getString("id")).child("nome");
         reference.addValueEventListener(new ValueEventListener() {
@@ -77,7 +87,18 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         }) ;
+        calendar = (CalendarView) rootView.findViewById(R.id.calendarView);
+        date = calendar.getDate();
+        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                if (calendar.getDate()!=date){
+                    date = calendar.getDate();
+                    Toast.makeText(rootView.getContext(), "Year=" + year + " Month=" + month + " Day=" + dayOfMonth, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -91,7 +112,25 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        calendar = (CalendarView) getView().findViewById(R.id.calendarView);
 
+        salva = (Button) getView().findViewById(R.id.buttonSalva);
+        salva.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                Parameters param = new Parameters();
+                param.setPressione(((EditText) getView().findViewById(R.id.editTextPressione)).getText().toString());
+                param.setTemperatura(((EditText) getView().findViewById(R.id.editTextTemperatura)).getText().toString());
+                if (!param.getTemperatura().equals("")&&!param.getPressione().equals("")){
+                    database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/hh/mm");
+                    String selectedDate = sdf.format(new Date(calendar.getDate()));
+                    reference= database.getReference().child("User").child(id).child("Parameters").child(selectedDate);
+                    reference.setValue(param);
+                }
+            }
+        });
     }
 
     @Override
