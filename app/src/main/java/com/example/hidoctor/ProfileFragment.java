@@ -27,7 +27,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.SQLOutput;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -41,7 +43,7 @@ public class ProfileFragment extends Fragment {
     CalendarView calendar;
     Button salva;
     String id;
-    long date;
+    Date date;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,13 +92,9 @@ public class ProfileFragment extends Fragment {
 
         }) ;
         calendar = (CalendarView) rootView.findViewById(R.id.calendarView);
-        date = calendar.getDate();
-        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                if (calendar.getDate()!=date){
-                    date = calendar.getDate();
-                    Toast.makeText(rootView.getContext(), "Year=" + year + " Month=" + month + " Day=" + dayOfMonth, Toast.LENGTH_LONG).show();
-                }
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
             }
         });
         return rootView;
@@ -125,7 +123,7 @@ public class ProfileFragment extends Fragment {
                 if (!param.getTemperatura().equals("")&&!param.getPressione().equals("")){
                     database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/hh/mm");
-                    String selectedDate = sdf.format(new Date(calendar.getDate()));
+                    String selectedDate = sdf.format(Calendar.get)
                     reference= database.getReference().child("User").child(id).child("Parameters").child(selectedDate);
                     reference.setValue(param);
                 }
