@@ -44,6 +44,8 @@ public class ProfileFragment extends Fragment {
     EditText name;
     String usernome;
     String usercognome;
+    String temperatura;
+    String pressione;
     CalendarView calendar;
     Button salva;
     String id;
@@ -105,12 +107,12 @@ public class ProfileFragment extends Fragment {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 date = String.valueOf(year) + String.valueOf(month) + String.valueOf(dayOfMonth);
 
-                if (!date.equals("")) {
                     reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("Pressione");
                     reference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            ((EditText) getView().findViewById(R.id.editTextPressione)).setText(snapshot.getValue(String.class));
+                            EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                            temp.setText(snapshot.getValue(String.class));
                         }
 
                         @Override
@@ -122,7 +124,8 @@ public class ProfileFragment extends Fragment {
                     reference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            ((EditText) getView().findViewById(R.id.editTextTemperatura)).setText(snapshot.getValue(String.class));
+                            EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                            temp.setText(snapshot.getValue(String.class));
                         }
 
                         @Override
@@ -132,7 +135,6 @@ public class ProfileFragment extends Fragment {
                     });
 
                 }
-            }
         });
 
         return rootView;

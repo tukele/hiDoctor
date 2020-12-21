@@ -9,12 +9,18 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,8 +89,24 @@ public class Login extends AppCompatActivity {
                                     user.setCognome((String) json.getJSONObject(0).getString("cognome"));
 
                                     database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-                                    reference= database.getReference().child("User").child(user.getId()).setValue(user);
+                                    Query query = database.getReference().child("User").orderByChild("id").equalTo(user.getId());
+                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            int i = 1;
+                                            for (DataSnapshot data : snapshot.getChildren()) {
+                                                i++;
+                                            }
+                                            if (i<=1){
+                                                System.out.println(i+"");
+                                                database.getReference().child("User").child(user.getId()).setValue(user);
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
+                                        }
+                                    });
                                     Intent intent = new Intent(Login.this, Home.class);
                                     intent.putExtra("id",user.getId());
                                     startActivity(intent);
