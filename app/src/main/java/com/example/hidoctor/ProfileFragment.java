@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 
 public class ProfileFragment extends Fragment {
@@ -41,6 +38,8 @@ public class ProfileFragment extends Fragment {
     CalendarView calendar;
     Button salva;
     String id;
+
+
     long date;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,14 +88,37 @@ public class ProfileFragment extends Fragment {
             }
 
         }) ;
+
         calendar = (CalendarView) rootView.findViewById(R.id.calendarView);
-        date = calendar.getDate();
-        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                if (calendar.getDate()!=date){
-                    date = calendar.getDate();
-                    Toast.makeText(rootView.getContext(), "Year=" + year + " Month=" + month + " Day=" + dayOfMonth, Toast.LENGTH_LONG).show();
+        reference=database.getReference().child("User").child(getArguments().getString("id"));
+        reference.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snap) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                String selectedDate = sdf.format(new Date(calendar.getDate()));
+                if(snap.child("Parameters").child(selectedDate).exists()){
+                    Parameters param=new Parameters();
+                    param= (Parameters) snap.child(selectedDate).getValue();
+                    EditText p= ((EditText) rootView.findViewById(R.id.editTextPressione));
+                    EditText t= ((EditText) rootView.findViewById(R.id.editTextTemperatura));
+                    p.setText(param.getPressione());
+                    t.setText(param.getPressione());
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        }) ;
+
+
+        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+
             }
         });
         return rootView;
@@ -112,7 +134,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        calendar = (CalendarView) getView().findViewById(R.id.calendarView);
 
         salva = (Button) getView().findViewById(R.id.buttonSalva);
         salva.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +145,7 @@ public class ProfileFragment extends Fragment {
                 param.setTemperatura(((EditText) getView().findViewById(R.id.editTextTemperatura)).getText().toString());
                 if (!param.getTemperatura().equals("")&&!param.getPressione().equals("")){
                     database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/hh/mm");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                     String selectedDate = sdf.format(new Date(calendar.getDate()));
                     reference= database.getReference().child("User").child(id).child("Parameters").child(selectedDate);
                     reference.setValue(param);
