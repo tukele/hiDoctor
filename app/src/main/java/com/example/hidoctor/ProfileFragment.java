@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +27,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.SQLOutput;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 public class ProfileFragment extends Fragment {
@@ -35,12 +44,13 @@ public class ProfileFragment extends Fragment {
     EditText name;
     String usernome;
     String usercognome;
+    String temperatura;
+    String pressione;
     CalendarView calendar;
     Button salva;
     String id;
-
-
-    long date;
+    String date;
+    LocalDateTime dateTime;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +63,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         id = getArguments().getString("id");
+        dateTime = LocalDateTime.now();
+        date = dateTime.getYear()+""+dateTime.getMonthValue()+""+dateTime.getDayOfMonth()+"";
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -90,37 +102,41 @@ public class ProfileFragment extends Fragment {
         }) ;
 
         calendar = (CalendarView) rootView.findViewById(R.id.calendarView);
-        reference=database.getReference().child("User").child(getArguments().getString("id"));
-        reference.addValueEventListener(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snap) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                String selectedDate = sdf.format(new Date(calendar.getDate()));
-                if(snap.child("Parameters").child(selectedDate).exists()){
-                    Parameters param=new Parameters();
-                    param= (Parameters) snap.child(selectedDate).getValue();
-                    EditText p= ((EditText) rootView.findViewById(R.id.editTextPressione));
-                    EditText t= ((EditText) rootView.findViewById(R.id.editTextTemperatura));
-                    p.setText(param.getPressione());
-                    t.setText(param.getPressione());
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                date = String.valueOf(year) + String.valueOf(month) + String.valueOf(dayOfMonth);
+
+                    reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("Pressione");
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                            temp.setText(snapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("Temperatura");
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                            temp.setText(snapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-
-        }) ;
-
-
-        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
-            }
         });
+
         return rootView;
     }
 
@@ -134,7 +150,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        //calendar = (CalendarView) getView().findViewById(R.id.calendarView);
         salva = (Button) getView().findViewById(R.id.buttonSalva);
         salva.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -145,9 +161,7 @@ public class ProfileFragment extends Fragment {
                 param.setTemperatura(((EditText) getView().findViewById(R.id.editTextTemperatura)).getText().toString());
                 if (!param.getTemperatura().equals("")&&!param.getPressione().equals("")){
                     database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                    String selectedDate = sdf.format(new Date(calendar.getDate()));
-                    reference= database.getReference().child("User").child(id).child("Parameters").child(selectedDate);
+                    reference= database.getReference().child("User").child(id).child("Parameters").child(date);
                     reference.setValue(param);
                 }
             }
