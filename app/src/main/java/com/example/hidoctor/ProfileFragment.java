@@ -56,6 +56,34 @@ public class ProfileFragment extends Fragment {
         id = getArguments().getString("id");
         dateTime = LocalDateTime.now();
         date = dateTime.getYear()+""+dateTime.getMonthValue()+""+dateTime.getDayOfMonth()+"";
+        database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+        reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("pressione");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                temp.setText(snapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("temperatura");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                temp.setText(snapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -65,7 +93,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+
         reference= database.getReference().child("User").child(getArguments().getString("id")).child("nome");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,18 +120,18 @@ public class ProfileFragment extends Fragment {
 
         }) ;
 
+
         calendar = (CalendarView) rootView.findViewById(R.id.calendarView);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                date = String.valueOf(year) + String.valueOf(month) + String.valueOf(dayOfMonth);
-
-                    reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("Pressione");
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
-                            temp.setText(snapshot.getValue(String.class));
+                date = String.valueOf(year) + String.valueOf(month+1) + String.valueOf(dayOfMonth);
+                reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("pressione");
+                reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                    temp.setText(snapshot.getValue(String.class));
                         }
 
                         @Override
@@ -111,13 +139,14 @@ public class ProfileFragment extends Fragment {
 
                         }
                     });
-                    reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("Temperatura");
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
-                            temp.setText(snapshot.getValue(String.class));
-                        }
+
+                reference = database.getReference().child("User").child(getArguments().getString("id")).child("Parameters").child(date).child("temperatura");
+                reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                    temp.setText(snapshot.getValue(String.class));
+                    }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
