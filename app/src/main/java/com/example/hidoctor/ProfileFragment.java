@@ -99,6 +99,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 usernome = dataSnapshot.getValue(String.class);
+                name = (EditText) rootView.findViewById(R.id.layout);
+                name.setText(usernome+" "+usercognome);
             }
             @Override
             public void onCancelled(DatabaseError error) {

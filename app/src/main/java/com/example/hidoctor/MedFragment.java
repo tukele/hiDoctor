@@ -31,7 +31,10 @@ public class MedFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference reference;
     String id;
+    private static Boolean tosseFlag;
+    private static Boolean febbreFlag;
     @Nullable
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med, container, false);
@@ -63,32 +66,36 @@ public class MedFragment extends Fragment {
             }
         }) ;
 
-
         tosse=(CheckBox) rootView.findViewById(R.id.checkTosse);
         febbre=(CheckBox) rootView.findViewById(R.id.checkFebbre);
 
-
-        reference= database.getReference().child("User").child(id);
+        reference= database.getReference().child("User").child(id).child("Symptoms").child("febbre");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("Symptoms").exists()){
-                    febbre.setChecked(Boolean.valueOf(String.valueOf(snapshot.child("febbre").getValue())));
-                    febbre.setActivated(febbre.isChecked());
-                    tosse.setChecked(Boolean.valueOf(String.valueOf(snapshot.child("tosse").getValue())));
-                    tosse.setActivated(tosse.isChecked());
-
-                }
+                    febbre.setChecked(Boolean.valueOf(String.valueOf(snapshot.getValue(String.class))));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+        reference= database.getReference().child("User").child(id).child("Symptoms").child("tosse");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tosse.setChecked(Boolean.valueOf(String.valueOf(snapshot.getValue(String.class))));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 
-
+        tosseFlag=tosse.isChecked();
+        febbreFlag=febbre.isChecked();
 
         return rootView;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -96,25 +103,68 @@ public class MedFragment extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HL7SEND message = new HL7SEND();
-                Symptoms symptoms= new Symptoms();
+                HL7SEND post = new HL7SEND("");
                 //TOSSE
-
-                    System.out.println(message.HL7Message(id, "tosse", Boolean.toString(tosse.isChecked())));
-
+                if(tosseFlag!=tosse.isChecked()) {
+                    post.setMessage(id,"tosse",Boolean.toString(tosse.isChecked()));
+                    System.out.println("INVIATO TOSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                    /*
+                    try {
+                        post.execute().get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                    tosseFlag = tosse.isChecked();
+                }
                 //FEBBRE
-
-                    System.out.println(message.HL7Message(id, "tosse", Boolean.toString(febbre.isChecked())));
-
-                symptoms.setTosse(Boolean.toString(tosse.isChecked()));
-                symptoms.setFebbre(Boolean.toString(febbre.isChecked()));
-
-                reference= database.getReference().child("User").child(id).child("Symptoms");
-                System.out.println(symptoms.getFebbre()+symptoms.getTosse());
-                reference.setValue(symptoms.getFebbre()+symptoms.getTosse());
+                if(febbreFlag!=febbre.isChecked()) {
+                    post.setMessage(id,"tosse",Boolean.toString(tosse.isChecked()));
+                    System.out.println("INVIATO FEBREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                    /*
+                    try {
+                        post.execute().get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                    febbreFlag = febbre.isChecked();
+                }
 
             }
         });
+        febbre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reference= database.getReference().child("User").child(id).child("Symptoms").child("febbre");
+                reference.setValue(Boolean.toString(febbre.isChecked()));
+            }
+        });
+        tosse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reference= database.getReference().child("User").child(id).child("Symptoms").child("tosse");
+                reference.setValue(Boolean.toString(tosse.isChecked()));
+            }
+        });
+
+
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Symptoms symptoms= new Symptoms();
+        symptoms.setTosse(Boolean.toString(tosse.isChecked()));
+        symptoms.setFebbre(Boolean.toString(febbre.isChecked()));
+        reference= database.getReference().child("User").child(id).child("Symptoms");
+        reference.setValue(symptoms);
+
+    }
+
+
+
 
 }
