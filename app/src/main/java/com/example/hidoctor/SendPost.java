@@ -24,6 +24,7 @@ public class SendPost extends AsyncTask {
         this.email = email;
         this.password = password;
     }
+
     public boolean getFlag(){
         return flag;
     }
