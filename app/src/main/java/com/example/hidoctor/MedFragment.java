@@ -33,6 +33,7 @@ public class MedFragment extends Fragment {
     String id;
     private static Boolean tosseFlag;
     private static Boolean febbreFlag;
+
     @Nullable
 
     @Override
@@ -73,7 +74,7 @@ public class MedFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    febbre.setChecked(Boolean.valueOf(String.valueOf(snapshot.getValue(String.class))));
+                    febbre.setChecked(Boolean.valueOf((snapshot.getValue(String.class))));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -83,15 +84,15 @@ public class MedFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tosse.setChecked(Boolean.valueOf(String.valueOf(snapshot.getValue(String.class))));
+                tosse.setChecked((Boolean)(Boolean.valueOf((snapshot.getValue(String.class)))));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
-        tosseFlag=tosse.isChecked();
-        febbreFlag=febbre.isChecked();
+        
+        MedFragment.tosseFlag=tosse.isChecked();
+        MedFragment.febbreFlag=febbre.isChecked();
 
         return rootView;
     }
@@ -105,7 +106,7 @@ public class MedFragment extends Fragment {
             public void onClick(View v) {
                 HL7SEND post = new HL7SEND("");
                 //TOSSE
-                if(tosseFlag!=tosse.isChecked()) {
+                if(MedFragment.tosseFlag!=tosse.isChecked()) {
                     post.setMessage(id,"tosse",Boolean.toString(tosse.isChecked()));
                     System.out.println("INVIATO TOSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                     /*
@@ -116,10 +117,10 @@ public class MedFragment extends Fragment {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }*/
-                    tosseFlag = tosse.isChecked();
+                    MedFragment.tosseFlag = tosse.isChecked();
                 }
                 //FEBBRE
-                if(febbreFlag!=febbre.isChecked()) {
+                if(MedFragment.febbreFlag!=febbre.isChecked()) {
                     post.setMessage(id,"tosse",Boolean.toString(tosse.isChecked()));
                     System.out.println("INVIATO FEBREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                     /*
@@ -130,7 +131,7 @@ public class MedFragment extends Fragment {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }*/
-                    febbreFlag = febbre.isChecked();
+                    MedFragment.febbreFlag = febbre.isChecked();
                 }
 
             }
@@ -159,12 +160,10 @@ public class MedFragment extends Fragment {
         Symptoms symptoms= new Symptoms();
         symptoms.setTosse(Boolean.toString(tosse.isChecked()));
         symptoms.setFebbre(Boolean.toString(febbre.isChecked()));
+        MedFragment.tosseFlag=tosse.isChecked();
+        MedFragment.febbreFlag=febbre.isChecked();
         reference= database.getReference().child("User").child(id).child("Symptoms");
         reference.setValue(symptoms);
-
     }
-
-
-
 
 }
