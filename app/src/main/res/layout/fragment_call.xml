@@ -3,28 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout3"
+    style="@style/Theme.HiDoctor"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#82B1FF"
+    android:theme="@style/Theme.HiDoctor">
 
     <Button
         android:id="@+id/callButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="215dp"
+        android:layout_height="70dp"
         android:text="Call"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:backgroundTint="#7986CB"
+        app:icon="@drawable/call"
+        app:iconSize="50dp"
+        app:iconTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.833" />
+        app:layout_constraintVertical_bias="0.975" />
 
     <EditText
         android:id="@+id/URL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#8C9EFF"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:text="Insert #room"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 
@@ -20,12 +21,14 @@ public class CallFragment extends Fragment {
 
     Button call;
     EditText URL;
+    String id;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_call, container, false);
-
+        id = getArguments().getString("id");
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         return rootView;
     }
 
@@ -38,7 +41,9 @@ public class CallFragment extends Fragment {
             @SuppressLint("WrongConstant")
             @Override
             public void onClick(View v) {
-                String urlString ="https://appr.tc/r/"+String.valueOf(URL.getText());
+                CallPost callPost= new CallPost("http://hidoctor.shardslab.com/Api/getCallCode",id);
+                System.out.println(callPost.getJSON());
+                String urlString ="https://appr.tc/r/"+callPost.getJSON();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setPackage("com.android.browser");
@@ -49,11 +54,7 @@ public class CallFragment extends Fragment {
                     intent.setPackage(null);
                     getContext().startActivity(intent);
                 }
-
             }
         });
-
-
-
     }
 }

@@ -3,63 +3,77 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
+    style="@style/Theme.HiDoctor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:saveEnabled="true">
+    android:background="#82B1FF"
+    android:saveEnabled="true"
+    android:theme="@style/Theme.HiDoctor">
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="238dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="308dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="TextView"
-        android:textSize="24sp"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:textStyle="bold|italic"
+        android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.426"
+        app:layout_constraintHorizontal_bias="0.427"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <CheckBox
         android:id="@+id/checkTosse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:typeface="monospace"
+        app:buttonTint="#B388FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.63"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.478" />
+        app:layout_constraintVertical_bias="0.408" />
 
     <TextView
         android:id="@+id/labelTosse"
-        android:layout_width="wrap_content"
+        android:layout_width="139dp"
         android:layout_height="wrap_content"
         android:text="Tosse"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.163"
+        app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.476" />
+        app:layout_constraintVertical_bias="0.399" />
 
     <CheckBox
         android:id="@+id/checkFebbre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:buttonTint="#B388FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.63"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32" />
+        app:layout_constraintVertical_bias="0.329" />
 
     <TextView
         android:id="@+id/labelFebbre"
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:text="Febbre"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.163"
@@ -69,14 +83,19 @@
 
     <Button
         android:id="@+id/sendButton"
-        android:layout_width="92dp"
-        android:layout_height="38dp"
+        android:layout_width="215dp"
+        android:layout_height="70dp"
         android:text="Send"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:backgroundTint="#7986CB"
+        app:icon="@android:drawable/ic_menu_send"
+        app:iconTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.429"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.717" />
+        app:layout_constraintVertical_bias="0.975" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
