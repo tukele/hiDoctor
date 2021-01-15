@@ -1,6 +1,6 @@
 package com.example.hidoctor;
 
-public class Symptoms {
+public class Symptoms  {
     private String febbre;
     private String tosse;
 
@@ -19,4 +19,5 @@ public class Symptoms {
     public void setTosse(String tosse) {
         this.tosse = tosse;
     }
+
 }

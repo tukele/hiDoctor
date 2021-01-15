@@ -1,5 +1,4 @@
 package com.example.hidoctor;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -15,17 +14,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.concurrent.ExecutionException;
 
 public class Login extends AppCompatActivity {
    //Widget Declaration
@@ -33,10 +26,11 @@ public class Login extends AppCompatActivity {
    private EditText email;
    private EditText password;
    private View view;
+   //Database Declaration
    private String URL="http://hidoctor.shardslab.com/auth";
    private FirebaseDatabase database;
-   private Task<Void> reference;
 
+    //HIDE THE KEYBOARD WHEN THE USER TOUCHES THE SCREEN OUTSIDE TEXT BOX
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -45,10 +39,11 @@ public class Login extends AppCompatActivity {
         }
 
     }
-
+    //LOGIN OF THE USER
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //NIGHT MODE OFF
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -57,6 +52,8 @@ public class Login extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.login);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
+
+        //HIDE THE KEYBOARD
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -65,32 +62,17 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        //HTTP POST ON CLICK OF LOGIN BUTTON
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                SendPost post=new SendPost(URL,email.getText().toString(), password.getText().toString());
-
-                try {
-                    post.execute().get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (post.getFlag()) {
+                HTTPost http=new HTTPost();
+                //JSON FROM SERVER RETURNS A VARIABLE FLAG THAT INDICATES IF THE LOGIN CREDENTIALS ARE CORRECT
+                if (http.loginHTTP(email.getText().toString(), password.getText().toString())) {
                         try {
-                            JSONArray json=new JSONArray(post.getJSON());
-
-                                if(json.getJSONObject(0).getString("flag_medico").equals("0")) {
-
-                                    User user=new User();
-                                    user.setId((String) json.getJSONObject(0).getString("id"));
-                                    user.setNome((String) json.getJSONObject(0).getString("nome"));
-                                    user.setCognome((String) json.getJSONObject(0).getString("cognome"));
-
+                                    System.out.println(User.currentUser);
                                     database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-                                    Query query = database.getReference().child("User").orderByChild("id").equalTo(user.getId());
+                                    Query query = database.getReference().child("User").orderByChild("id").equalTo(User.currentUser.getId());
                                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,19 +82,17 @@ public class Login extends AppCompatActivity {
                                             }
                                             if (i<=1){
                                                 System.out.println(i+"");
-                                                database.getReference().child("User").child(user.getId()).setValue(user);
+                                                database.getReference().child("User").child(User.currentUser.getId()).setValue(User.currentUser);
                                             }
                                         }
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError error) {
-
                                         }
                                     });
                                     Intent intent = new Intent(Login.this, Home.class);
-                                    intent.putExtra("id",user.getId());
                                     startActivity(intent);
-                                }
-                            } catch (JSONException e) {
+
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                     }

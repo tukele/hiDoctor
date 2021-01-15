@@ -6,7 +6,8 @@ public class User implements Serializable {
     private String id;
     private String nome;
     private String cognome;
-    private String flag_medico;
+    private String nomeMedico;
+    public static User currentUser;
 
     public String getId() {
         return id;
@@ -32,11 +33,12 @@ public class User implements Serializable {
         this.cognome = cognome;
     }
 
-    public String getFlag_medico() {
-        return flag_medico;
+    public String getNomeMedico() {
+        return nomeMedico;
     }
 
-    public void setFlag_medico(String flag_medico) {
-        this.flag_medico = flag_medico;
+    public void setNomeMedico(String nomeMedico){
+        this.nomeMedico=nomeMedico;
     }
+
 }
