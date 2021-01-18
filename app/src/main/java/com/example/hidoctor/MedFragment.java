@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,7 +44,8 @@ public class MedFragment extends Fragment {
     private static Boolean febbreFlag;
     ListView list;
     private ArrayAdapter<String> adapter;
-
+    PopupWindow popupWindow;
+    ArrayList<Symptom> symptoms;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     //SET UP MED FRAGMENT
@@ -51,26 +53,16 @@ public class MedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med, container, false);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        ArrayList<Symptom> symptoms = new ArrayList<>();
+        symptoms = new ArrayList<>();
         parseXML(symptoms);
         list= (ListView) rootView.findViewById(R.id.listView);
         ArrayList<String> arrayList= new ArrayList<>();
         for(Symptom symptom: symptoms){
             arrayList.add(symptom.name);
         }
-        adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item,arrayList);
+        adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,arrayList);
         list.setAdapter(adapter);
-        list.setClickable(false);
-        list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(parent.getSelectedItem());
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
         //SET NAME
         name= (TextView) rootView.findViewById(R.id.name);
         name.setText(User.currentUser.getNome()+" "+User.currentUser.getCognome());
@@ -146,6 +138,15 @@ public class MedFragment extends Fragment {
             public void onClick(View v) {
                 reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child("tosse");
                 reference.setValue(Boolean.toString(tosse.isChecked()));
+            }
+        });
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println(symptoms.get(position).getName());
+                popupWindow = new PopupWindow(getView());
+
+
             }
         });
     }
