@@ -54,13 +54,770 @@
             ""
         </Options>
         <Description>
-            “Blood pressure is the force of blood pushing against the walls of the arteries as your heart pumps blood.”        </Description>
+            “Blood pressure is the force of blood pushing against the walls of the arteries as your heart pumps blood.”
+        </Description>
         <Placeholder>
            "max/min"
         </Placeholder>
     </Parameter>
-
+    <Parameter>
+        <Name>
+            Body Temperature
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Value
+        </Operation>
+        <Options>
+            ""
+        </Options>
+        <Description>
+            “The average normal body temperature is 37°C; what’s normal for you may be a degree or more higher or lower than this.”
+        </Description>
+        <Placeholder>
+            “°C”
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Heat Rate
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Value
+        </Operation>
+        <Options>
+            ""
+        </Options>
+        <Description>
+            “Your heart rate refers to how many times your heart beats per minute and can be an indicator of your cardiovascular health.”
+        </Description>
+        <Placeholder>
+            “BPM”
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Menstruation
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “No Flow”, “Unspecified Flow”, “Light”, “Medium”, “Heavy”
+        </Options>
+        <Description>
+            “Menstruation is normal vaginal bleeding that happens as part of woman’s monthly cycle.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Oxygen Saturation
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Value
+        </Operation>
+        <Options>
+            ""
+        </Options>
+        <Description>
+            “Oxygen saturation is a measure of the amount of oxygen in the protein (hemoglobin) in your red blood cells.”
+        </Description>
+        <Placeholder>
+            "%"
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Respiration Rate
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Value
+        </Operation>
+        <Options>
+            ""
+        </Options>
+        <Description>
+            “Respiratory rate is your rate of breathing within a certain time.”
+        </Description>
+        <Placeholder>
+            “breaths/min”
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Acne
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “This is a dull aching or sharp pain in your abdomen that comes and goes.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Appetite Changes
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “No Changes”, “Present”, “Decreased”, “Increased”
+        </Options>
+        <Description>
+            A change in appetite is the desire to eat a different amount or type of food than you usually do in your normal eating habits.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Bloating
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Bloating is a feeling of tightness, discomfort or fullness in your stomach or abdomen.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Body and Muscle Acne
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Body aches or muscle pain refers to tenderness or soreness within a muscle or throughout the body.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Breast Pain
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Breast pain rarely indicates cancer. If you breast pain doesn’t go away after one or two menstrual cycles or persists after menopause, you should bring it up with your doctor.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Chest Tightness or Pain
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Chest discomfort can take many forms; it may feel like squeezing, a weight on the chest or difficulty breathing.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Chills
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Chills is the sensation of being cold without an apparent reason.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Congestion
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Chills is the sensation of being cold without an apparent reason.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Constipation
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Constipation is generally described as difficulty passing stools, often with infrequent bowel movements.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Coughing
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “A cough is a reflex the body uses to get rid of irritants, triggered by the stimulation of nerve endings in the throat or airways.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Diarrhea
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Multiple bowel movements a day the are watery and thin are considered diarrhea.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Dizziness
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Dizziness is feeling faint or lightheaded, often with difficulty balancing or a spinning sensation.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Fainting
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Fainting is the temporary loss of consciousness, usually resulting from an insufficient flow of blood, oxygen or glucose to the brain.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Fatigue
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Fatigue is a feeling of tiredness often due to mental or physical effort.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Fever
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Any orally measured body temperature above 38°C is considered a fever”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Headache
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “A headache is pain in any part of the head; it can feel like a sharp pain, throbbing or a dull ache.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Heartburn
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Heartburn is a painful burning sensation in the chest and upper belly that usually arises when acid escapes from the stomach and irritates the esophagus.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Hot Flushes
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Hot flushes are sudden feelings of warmth in the upper body not caused by external factors like weather, spicy food or fever.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Loss of Smell
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Loss of smell is the inability to distinguish odors.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Loss of Taste
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Loss of the sense of taste is the inability to distinguish flavors.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Lower Back Pain
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Back pain can include aching muscles, shooting or stabbing pain, or pain that radiates down your leg.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Mood Changes
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”
+        </Options>
+        <Description>
+            “These are changes in your emotions, energy levels or focus that affect your ability to work, study and so on.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Nausea
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Nausea is a feeling of sickness in your stomach that may lead to vomiting.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Pelvic Pain
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “It is a pain in the lowest part of your abdomen and pelvis.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Rapid, Pounding or Fluttering Heartbeat
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Also known as palpitation, this type of change in the heartbeat is most often caused by strenuous activity, stressful situation, medication, or a stimulant like caffeine or alcohol.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Runny Nose
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “A runny nose is the ongoing discharge of fluid caused by irritation or inflammation of the nasal passage.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Shortness of Breath
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “This is the feeling that you can’t catch your breath.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Wheezing
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Wheezing is characterized by a high-pitched whistling sound made when inhaling or exhaling.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Vomiting
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Vomiting occurs when the stomach contracts and forces its contents back out both the mouth.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Vaginal Dryness
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Vaginal Dryness is the result of a decrease in the lubrication produced by the cells that line the vagina.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Sore Throat
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Sore Throat is characterized as pain with a row, burring or scratchy sensation.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Sleep Changes
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”
+        </Options>
+        <Description>
+            “These are changes in the length or quality of your sleep.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Skipped Heartbeat
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            “Not Present”, “Present”, “Mild”, “Moderate”, “Severe”
+        </Options>
+        <Description>
+            “Skipped heartbeat is a sensation in your chest that feels like a missed or abnormal heartbeat, also known as a palpitation.”
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
 </Parameters>
-
-
-
