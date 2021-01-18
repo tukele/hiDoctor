@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Parameters>
+    <Parameter>
+        <Name>
+            Abdominal Cramps
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Select
+        </Operation>
+        <Options>
+            Not Present, Present, Mild, Moderate,Severe
+        </Options>
+        <Description>
+            “This is a dull aching or sharp pain in your abdomen that comes and goes.
+        </Description>
+        <Placeholder>
+            ""
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Blood Glucose
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Value
+        </Operation>
+        <Options>
+            ""
+        </Options>
+        <Description>
+            “Blood glucose - also called blood sugar - is the main sugar found in the blood and the main source of energy for your body.”
+        </Description>
+        <Placeholder>
+            mg/dL
+        </Placeholder>
+    </Parameter>
+    <Parameter>
+        <Name>
+            Blood Pressure
+        </Name>
+        <Type>
+            Health Parameter
+        </Type>
+        <Operation>
+            Value
+        </Operation>
+        <Options>
+            ""
+        </Options>
+        <Description>
+            “Blood pressure is the force of blood pushing against the walls of the arteries as your heart pumps blood.”        </Description>
+        <Placeholder>
+           "max/min"
+        </Placeholder>
+    </Parameter>
+
+</Parameters>
+
+
+
