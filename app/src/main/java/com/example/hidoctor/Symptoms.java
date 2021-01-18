@@ -3,6 +3,14 @@ package com.example.hidoctor;
 public class Symptoms  {
     private String febbre;
     private String tosse;
+    private String operation;
+
+
+
+
+
+
+
 
     public String getFebbre() {
         return febbre;

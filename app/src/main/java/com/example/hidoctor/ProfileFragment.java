@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         //SET NAME TEXT BOX
-        name= (EditText) rootView.findViewById(R.id.userName);
+        name= (EditText) rootView.findViewById(R.id.layout);
         name.setText(User.currentUser.getNome()+" "+User.currentUser.getCognome());
         //CALENDAR VIEW
         calendar = (CalendarView) rootView.findViewById(R.id.calendarView);

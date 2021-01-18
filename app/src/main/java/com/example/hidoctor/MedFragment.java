@@ -1,12 +1,14 @@
 package com.example.hidoctor;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
 public class MedFragment extends Fragment {
 
     CheckBox tosse;
@@ -31,6 +41,8 @@ public class MedFragment extends Fragment {
     DatabaseReference reference;
     private static Boolean tosseFlag;
     private static Boolean febbreFlag;
+    ListView list;
+    private ArrayAdapter<String> adapter;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
@@ -39,6 +51,26 @@ public class MedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med, container, false);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        ArrayList<Symptom> symptoms = new ArrayList<>();
+        parseXML(symptoms);
+        list= (ListView) rootView.findViewById(R.id.listView);
+        ArrayList<String> arrayList= new ArrayList<>();
+        for(Symptom symptom: symptoms){
+            arrayList.add(symptom.name);
+        }
+        adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item,arrayList);
+        list.setAdapter(adapter);
+        list.setClickable(false);
+        list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         //SET NAME
         name= (TextView) rootView.findViewById(R.id.name);
         name.setText(User.currentUser.getNome()+" "+User.currentUser.getCognome());
@@ -72,20 +104,6 @@ public class MedFragment extends Fragment {
         MedFragment.febbreFlag=febbre.isChecked();
 
 
-
-        /*
-        ListView list= (ListView) rootView.findViewById(R.id.list);
-
-        Symptom[] symptomsList= new Symptom[2];
-
-        symptomsList[0]=(new Symptom("febbre","0"));
-        symptomsList[1]=(new Symptom("tosse","0"));
-        @SuppressLint("CutPasteId")
-
-        ArrayAdapter arrayAdapter= new ArrayAdapter(getContext(),R.layout.fragment_med, Arrays.stream(symptomsList).map(p -> p.nome).toArray(size -> new String [symptomsList.length]));
-        list.setAdapter(arrayAdapter);
-        */
-        System.out.println("Vado a cacare loggo su rocket");
 
 
 
@@ -144,5 +162,65 @@ public class MedFragment extends Fragment {
         reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms");
         reference.setValue(symptoms);
     }
+    private void parseXML(ArrayList<Symptom> symptoms){
+        XmlPullParserFactory parserFactory;
+        try{
+            parserFactory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser= parserFactory.newPullParser();
+            InputStream is = getContext().getAssets().open("symptoms.xml");
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES,false);
+            parser.setInput(is,null);
+            processParsing(parser,symptoms);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void processParsing(XmlPullParser parser,ArrayList<Symptom> symptoms) throws IOException, XmlPullParserException {
+        int eventType = parser.getEventType();
+        Symptom symptom=null;
+        while(eventType != XmlPullParser.END_DOCUMENT){
+            String name=null;
+            switch (eventType){
+                case XmlPullParser.START_TAG:
+                    name = parser.getName();
 
+                    if ("Parameter".equals(name)){
+                        symptom= new Symptom();
+                        symptoms.add(symptom);
+                    }
+                    else if(symptom !=null ){
+                        if("Name".equals(name)){
+                            symptom.setName(parser.nextText());
+                        }else if("Type".equals(name)){
+                            symptom.setType(parser.nextText());
+                        }else if("Operation".equals(name)){
+                            symptom.setOperation(parser.nextText());
+                        }else if("Options".equals(name)){
+                            symptom.setOptions(parser.nextText());
+                        }else if("Description".equals(name)){
+                            symptom.setDescription(parser.nextText());
+                        }else if("Placeholder".equals(name)){
+                            symptom.setPlaceholder(parser.nextText());
+                        }
+                    }
+                    break;
+            }
+            eventType = parser.next();
+        }
+        printSymptoms(symptoms);
+    }
+    private void printSymptoms(ArrayList<Symptom> symptoms){
+        StringBuilder builder = new StringBuilder();
+
+        for (Symptom symptom: symptoms){
+            builder.append(symptom.name).append("\n").
+                    append(symptom.type).append("\n").
+                    append(symptom.operation).append("\n").
+                    append(symptom.options).append("\n").
+                    append(symptom.description).append("\n").
+                    append(symptom.placeholder).append("\n\n");
+        }
+        System.out.println(builder.toString());
+    }
 }
