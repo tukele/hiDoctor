@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout2"
-    style="@style/Theme.HiDoctor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#82B1FF"
@@ -11,16 +10,12 @@
 
     <Button
         android:id="@+id/buttonSalva"
-        style="@style/Theme.HiDoctor"
         android:layout_width="215dp"
         android:layout_height="70dp"
         android:text="SAVE"
         android:textColor="#000000"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:backgroundTint="#7986CB"
-        app:icon="@android:drawable/ic_menu_send"
-        app:iconTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -30,7 +25,6 @@
 
     <CalendarView
         android:id="@+id/calendarView"
-        style="@style/Theme.HiDoctor"
         android:layout_width="414dp"
         android:layout_height="303dp"
         android:background="#8C9EFF"

@@ -8,13 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
@@ -42,10 +43,22 @@ public class MedFragment extends Fragment {
     DatabaseReference reference;
     private static Boolean tosseFlag;
     private static Boolean febbreFlag;
+
+
+
+
+    Button exitButton;
+    Button saveButton;
+    EditText value;
+    TextView symptomDescription;
+    TextView symptomName;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
     ListView list;
     private ArrayAdapter<String> adapter;
-    PopupWindow popupWindow;
     ArrayList<Symptom> symptoms;
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     //SET UP MED FRAGMENT
@@ -140,13 +153,15 @@ public class MedFragment extends Fragment {
                 reference.setValue(Boolean.toString(tosse.isChecked()));
             }
         });
+
+
+
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println(symptoms.get(position).getName());
-                popupWindow = new PopupWindow(getView());
-
-
+                createNewContactDialog(symptoms.get(position));
             }
         });
     }
@@ -163,6 +178,26 @@ public class MedFragment extends Fragment {
         reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms");
         reference.setValue(symptoms);
     }
+    public void createNewContactDialog(Symptom symptom){
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
+        saveButton = (Button) getView().findViewById(R.id.saveButton);
+        exitButton = (Button) getView().findViewById(R.id.exitButton);
+        symptomName = (TextView) getView().findViewById(R.id.symptomName);
+
+        symptomDescription = (TextView) getView().findViewById(R.id.symptomDescription);
+
+        value = (EditText) getView().findViewById(R.id.value);
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create().setTitle();
+        dialog.show();
+        symptomName.setText(symptom.getName());
+        symptomDescription.setText(symptom.getDescription());
+
+    }
+
+
     private void parseXML(ArrayList<Symptom> symptoms){
         XmlPullParserFactory parserFactory;
         try{
