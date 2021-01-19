@@ -88,7 +88,9 @@ public class HTTPost extends AsyncTask {
     }
     //SEND HL7 MESSAGE TO WEBSERVER
     public boolean HL7_HTTP(String id,String symptom,String value){
-
+        if(value.equals("")){
+            return false;
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date_D = new Date();
         String date=(String)(formatter.format(date_D));

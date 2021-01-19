@@ -1,4 +1,5 @@
 package com.example.hidoctor;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,24 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -35,29 +25,10 @@ import java.util.ArrayList;
 
 public class MedFragment extends Fragment {
 
-    CheckBox tosse;
-    CheckBox febbre;
-    TextView name;
-    Button send;
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    private static Boolean tosseFlag;
-    private static Boolean febbreFlag;
-
-
-
-
-    Button exitButton;
-    Button saveButton;
-    EditText value;
-    TextView symptomDescription;
-    TextView symptomName;
-    private AlertDialog.Builder dialogBuilder;
-    private AlertDialog dialog;
     ListView list;
     private ArrayAdapter<String> adapter;
     ArrayList<Symptom> symptoms;
-
+    public static Symptom currentSymptom;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
@@ -71,46 +42,10 @@ public class MedFragment extends Fragment {
         list= (ListView) rootView.findViewById(R.id.listView);
         ArrayList<String> arrayList= new ArrayList<>();
         for(Symptom symptom: symptoms){
-            arrayList.add(symptom.name);
+            arrayList.add(symptom.name.trim());
         }
-        adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,arrayList);
+        adapter=new ArrayAdapter<String>(getContext(), R.layout.list_layout,arrayList);
         list.setAdapter(adapter);
-
-        //SET NAME
-        name= (TextView) rootView.findViewById(R.id.name);
-        name.setText(User.currentUser.getNome()+" "+User.currentUser.getCognome());
-        //CHECKBOX DECLARATION
-        tosse=(CheckBox) rootView.findViewById(R.id.checkTosse);
-        febbre=(CheckBox) rootView.findViewById(R.id.checkFebbre);
-        // LOADS VALUES OF CHECKBOX FROM DATABASE
-        database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child("febbre");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    febbre.setChecked(Boolean.valueOf((snapshot.getValue(String.class))));
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child("tosse");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tosse.setChecked((Boolean)(Boolean.valueOf((snapshot.getValue(String.class)))));
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-        //FLAG
-        MedFragment.tosseFlag=tosse.isChecked();
-        MedFragment.febbreFlag=febbre.isChecked();
-
-
-
-
 
         return rootView;
     }
@@ -118,86 +53,22 @@ public class MedFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //SEND HL7 WITH HTTP TO WEBSERVER IF DATA FROM CHECKBOX HAS CHANGED
-        send = (Button) getView().findViewById(R.id.sendButton);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TOSSE
-                HTTPost http= new HTTPost();
-                if(MedFragment.tosseFlag!=tosse.isChecked()) {
-                    if(http.HL7_HTTP(User.currentUser.getId(),"tosse",Boolean.toString(tosse.isChecked()))) {
-                        MedFragment.tosseFlag = tosse.isChecked();
-                    }
-                }
-                //FEBBRE
-                if(MedFragment.febbreFlag!=febbre.isChecked()) {
-                    if(http.HL7_HTTP(User.currentUser.getId(),"febbre",Boolean.toString(febbre.isChecked()))) {
-                        MedFragment.febbreFlag = febbre.isChecked();
-                    }
-                }
-            }
-        });
-        //LOAD FROM DATABASE VALUES OF CHECKBOXES
-        febbre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child("febbre");
-                reference.setValue(Boolean.toString(febbre.isChecked()));
-            }
-        });
-        tosse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child("tosse");
-                reference.setValue(Boolean.toString(tosse.isChecked()));
-            }
-        });
-
-
-
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(symptoms.get(position).getName());
-                createNewContactDialog(symptoms.get(position));
+                MedFragment.currentSymptom=symptoms.get(position);
+                Intent intent = new Intent(getActivity(), SymptomActivity.class);
+                startActivity(intent);
             }
         });
     }
+
     //SAVE TO DATABASE IF USER SWITCHES FRAGMENT
     //DATA WONT BE SEND TO WEB SERVER UNTIL USERS DOES NOT PRESS SEND BUTTON
     @Override
     public void onPause() {
         super.onPause();
-        Symptoms symptoms= new Symptoms();
-        symptoms.setTosse(Boolean.toString(tosse.isChecked()));
-        symptoms.setFebbre(Boolean.toString(febbre.isChecked()));
-        MedFragment.tosseFlag=tosse.isChecked();
-        MedFragment.febbreFlag=febbre.isChecked();
-        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms");
-        reference.setValue(symptoms);
     }
-    public void createNewContactDialog(Symptom symptom){
-        dialogBuilder = new AlertDialog.Builder(getContext());
-        final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
-        saveButton = (Button) getView().findViewById(R.id.saveButton);
-        exitButton = (Button) getView().findViewById(R.id.exitButton);
-        symptomName = (TextView) getView().findViewById(R.id.symptomName);
-
-        symptomDescription = (TextView) getView().findViewById(R.id.symptomDescription);
-
-        value = (EditText) getView().findViewById(R.id.value);
-
-        dialogBuilder.setView(contactPopupView);
-        dialog = dialogBuilder.create().setTitle();
-        dialog.show();
-        symptomName.setText(symptom.getName());
-        symptomDescription.setText(symptom.getDescription());
-
-    }
-
-
     private void parseXML(ArrayList<Symptom> symptoms){
         XmlPullParserFactory parserFactory;
         try{
@@ -244,7 +115,7 @@ public class MedFragment extends Fragment {
             }
             eventType = parser.next();
         }
-        printSymptoms(symptoms);
+       // printSymptoms(symptoms);
     }
     private void printSymptoms(ArrayList<Symptom> symptoms){
         StringBuilder builder = new StringBuilder();

@@ -94,7 +94,7 @@
             ""
         </Options>
         <Description>
-            “Your heart rate refers to how many times your heart beats per minute and can be an indicator of your cardiovascular health.”
+“Your heart rate refers to how many times your heart beats per minute and can be an indicator of your cardiovascular health.”
         </Description>
         <Placeholder>
             “BPM”
@@ -111,10 +111,10 @@
             Select
         </Operation>
         <Options>
-            “No Flow”, “Unspecified Flow”, “Light”, “Medium”, “Heavy”
+        “No Flow”, “Unspecified Flow”, “Light”, “Medium”, “Heavy”
         </Options>
         <Description>
-            “Menstruation is normal vaginal bleeding that happens as part of woman’s monthly cycle.”
+“Menstruation is normal vaginal bleeding that happens as part of woman’s monthly cycle.”
         </Description>
         <Placeholder>
             ""
