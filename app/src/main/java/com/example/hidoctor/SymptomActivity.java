@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -16,8 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class SymptomActivity extends AppCompatActivity {
@@ -29,6 +35,10 @@ public class SymptomActivity extends AppCompatActivity {
     TextView symptomDescription;
     TextView symptomName;
     Spinner spinner;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+    String date;
+    LocalDateTime dateTime;
     private ArrayAdapter<String> adapter;
     private View symptomView;
 
@@ -97,10 +107,16 @@ public class SymptomActivity extends AppCompatActivity {
         }else{
             spinner.setVisibility(View.INVISIBLE);
             saveButton.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
                     HTTPost post= new HTTPost();
-                    if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()))){
+                    if(post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()))){
+                        dateTime = LocalDateTime.now();
+                        date = dateTime.getYear()+""+dateTime.getMonthValue()+""+dateTime.getDayOfMonth()+"";
+                        database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+                        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(date).child(MedFragment.currentSymptom.getName());
+                        reference.setValue(String.valueOf(value.getText()));
                         saveButton.setBackgroundColor(Color.GREEN);
                         Intent intent = new Intent(SymptomActivity.this, Home.class);
                         intent.putExtra("Med",true);
