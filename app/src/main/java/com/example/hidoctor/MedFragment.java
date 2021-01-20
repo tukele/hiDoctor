@@ -62,7 +62,6 @@ public class MedFragment extends Fragment {
             }
         });
     }
-
     //SAVE TO DATABASE IF USER SWITCHES FRAGMENT
     //DATA WONT BE SEND TO WEB SERVER UNTIL USERS DOES NOT PRESS SEND BUTTON
     @Override

@@ -1,4 +1,5 @@
 package com.example.hidoctor;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -29,6 +31,7 @@ public class Login extends AppCompatActivity {
    //Database Declaration
    private String URL="http://hidoctor.shardslab.com/auth";
    private FirebaseDatabase database;
+   private TextView errorMessage;
 
     //HIDE THE KEYBOARD WHEN THE USER TOUCHES THE SCREEN OUTSIDE TEXT BOX
     public void hideKeyboard() {
@@ -37,7 +40,6 @@ public class Login extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-
     }
     //LOGIN OF THE USER
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -46,12 +48,14 @@ public class Login extends AppCompatActivity {
         //NIGHT MODE OFF
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         //Widget Inizialization
         view = (View) findViewById(R.id.view);
         loginButton = (Button) findViewById(R.id.login);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
+        errorMessage = (TextView) findViewById(R.id.error);
+        errorMessage.setVisibility(View.INVISIBLE);
 
         //HIDE THE KEYBOARD
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -67,6 +71,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HTTPost http=new HTTPost();
+                hideKeyboard();
                 //JSON FROM SERVER RETURNS A VARIABLE FLAG THAT INDICATES IF THE LOGIN CREDENTIALS ARE CORRECT
                 if (http.loginHTTP(email.getText().toString(), password.getText().toString())) {
                         try {
@@ -95,9 +100,8 @@ public class Login extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                    }
-
-
+                    }else
+                    errorMessage.setVisibility(View.VISIBLE);
             }
         });
     }

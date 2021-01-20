@@ -19,7 +19,7 @@ public class HTTPost extends AsyncTask {
     private static final String LOGIN_URL ="http://hidoctor.shardslab.com/auth";
     private static final String CALL_URL = "http://hidoctor.shardslab.com/Api/getCallCode";
     private static final String DOCTOR_URL = "http://hidoctor.shardslab.com/Api/getDoctorPerPatient";
-    private static final String HL7_URL = "http://hidoctor.shardslab.com/Api/getDoctorPerPatient";
+    private static final String HL7_URL = "http://hidoctor.shardslab.com/loadHL7";
 
     //OKHTTPCLIENT
     private final OkHttpClient client = new OkHttpClient();
@@ -144,11 +144,12 @@ public class HTTPost extends AsyncTask {
                 "  },\n" +
                 " \"subject\": {\n" +
                 "    \"reference\": \""+id+"\"\n" +
-                "  },"+
+                "  }"+
                 "}";
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("HL7", HL7)
+                .addFormDataPart("id",id)
+                .addFormDataPart("hl7", HL7)
                 .build();
 
         data[0]=requestBody;

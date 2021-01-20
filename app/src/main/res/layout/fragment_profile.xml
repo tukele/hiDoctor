@@ -5,23 +5,25 @@
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#82B1FF"
+    android:background="#FFFFFF"
     android:theme="@style/Theme.HiDoctor">
 
     <Button
         android:id="@+id/buttonSalva"
-        android:layout_width="215dp"
-        android:layout_height="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
         android:text="SAVE"
         android:textColor="#000000"
         android:textSize="30sp"
         android:textStyle="bold"
+        app:backgroundTint="#7986CB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.661"
         app:layout_constraintStart_toStartOf="@+id/calendarView"
         app:layout_constraintTop_toBottomOf="@+id/editTextPressione"
-        app:layout_constraintVertical_bias="0.378" />
+        app:layout_constraintVertical_bias="0.355" />
 
     <CalendarView
         android:id="@+id/calendarView"
@@ -43,7 +45,7 @@
         android:id="@+id/layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#82B1FF"
+        android:background="#FFFFFF"
         android:capitalize="words"
         android:clickable="false"
         android:cursorVisible="false"
@@ -67,7 +69,7 @@
         android:id="@+id/labelTemperatura"
         android:layout_width="153dp"
         android:layout_height="60dp"
-        android:background="#82B1FF"
+        android:background="#FFFFFF"
         android:focusableInTouchMode="false"
         android:gravity="center_vertical"
         android:text="Temperature"
@@ -86,7 +88,7 @@
         android:id="@+id/labelPressione"
         android:layout_width="151dp"
         android:layout_height="60dp"
-        android:background="#82B1FF"
+        android:background="#FFFFFF"
         android:gravity="center_vertical"
         android:text="Pressure"
         android:textColor="#000000"
@@ -110,10 +112,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.588"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.156"
+        app:layout_constraintStart_toEndOf="@+id/labelPressione"
         app:layout_constraintTop_toBottomOf="@+id/editTextTemperatura"
-        app:layout_constraintVertical_bias="0.184" />
+        app:layout_constraintVertical_bias="0.195" />
 
     <EditText
         android:id="@+id/editTextTemperatura"
@@ -125,9 +127,9 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.588"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.156"
+        app:layout_constraintStart_toEndOf="@+id/labelTemperatura"
         app:layout_constraintTop_toBottomOf="@+id/calendarView"
-        app:layout_constraintVertical_bias="0.101" />
+        app:layout_constraintVertical_bias="0.089" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

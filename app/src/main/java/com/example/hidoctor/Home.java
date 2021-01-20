@@ -17,9 +17,9 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-
         if(getIntent().getBooleanExtra("Med",false)){
             MedFragment prof = new MedFragment();
+            bottomNav.setSelectedItemId(R.id.med);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, prof).commit();
         }else{
             ProfileFragment prof = new ProfileFragment();
