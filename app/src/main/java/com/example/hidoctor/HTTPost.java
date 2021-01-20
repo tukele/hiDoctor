@@ -1,6 +1,9 @@
 package com.example.hidoctor;
 import android.os.AsyncTask;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -20,7 +23,9 @@ public class HTTPost extends AsyncTask {
     private static final String CALL_URL = "http://hidoctor.shardslab.com/Api/getCallCode";
     private static final String DOCTOR_URL = "http://hidoctor.shardslab.com/Api/getDoctorPerPatient";
     private static final String HL7_URL = "http://hidoctor.shardslab.com/loadHL7";
-
+    //DATABASE
+    FirebaseDatabase database;
+    DatabaseReference reference;
     //OKHTTPCLIENT
     private final OkHttpClient client = new OkHttpClient();
     //DATA POST: REQUESTBODY AND URL
@@ -87,18 +92,21 @@ public class HTTPost extends AsyncTask {
         return "";
     }
     //SEND HL7 MESSAGE TO WEBSERVER
-    public boolean HL7_HTTP(String id,String symptom,String value){
+    public boolean HL7_HTTP(String id,String symptom,String value,String lastUpdated){
         if(value.equals("")){
             return false;
         }
+        System.out.println("LASTUPDATED NELLHLT IDOWAIJDOIDJWA"+lastUpdated);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date_D = new Date();
         String date=(String)(formatter.format(date_D));
+
+
         String HL7="{\n" +
                 "  \"resourceType\" : \"ValueSet\",\n" +
                 "  \"id\" : \"condition-category\",\n" +
                 "  \"meta\" : {\n" +
-                "    \"lastUpdated\" : \""+date+"\",\n" +
+                "    \"lastUpdated\" : \""+lastUpdated+"\",\n" +
                 "    \"profile\" : [\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]\n" +
                 "  },\n" +
                 "  \"text\" : {\n" +
@@ -146,6 +154,7 @@ public class HTTPost extends AsyncTask {
                 "    \"reference\": \""+id+"\"\n" +
                 "  }"+
                 "}";
+        //System.out.println(HL7);
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id",id)
@@ -175,7 +184,8 @@ public class HTTPost extends AsyncTask {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             Headers responseHeaders = response.headers();
             for (int i = 0; i < responseHeaders.size(); i++) {
-                System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+              //  System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i)); ;
+
             }
             //SAVE RESPONSE
             responseHTTP=response.body().string();

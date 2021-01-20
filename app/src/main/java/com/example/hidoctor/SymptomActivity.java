@@ -15,16 +15,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SymptomActivity extends AppCompatActivity {
 
@@ -37,11 +42,10 @@ public class SymptomActivity extends AppCompatActivity {
     Spinner spinner;
     FirebaseDatabase database;
     DatabaseReference reference;
-    String date;
-    LocalDateTime dateTime;
     private ArrayAdapter<String> adapter;
     private View symptomView;
-
+    String lastUpdated="";
+    boolean flag=false;
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -56,7 +60,6 @@ public class SymptomActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.symptom_selection);
-
         symptomView=(View) findViewById(R.id.symptomView);
         //HIDE THE KEYBOARD
         symptomView.setOnTouchListener(new View.OnTouchListener() {
@@ -66,7 +69,6 @@ public class SymptomActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         System.out.println(MedFragment.currentSymptom.getOperation());
         spinner = (Spinner) findViewById(R.id.spinner);
         value=(EditText) findViewById(R.id.value);
@@ -77,10 +79,15 @@ public class SymptomActivity extends AppCompatActivity {
         symptomDescription=(TextView) findViewById(R.id.symptomDescription);
         symptomDescription.setText(MedFragment.currentSymptom.getDescription().replaceAll("\\W", " ").trim());
         saveButton=(Button) findViewById(R.id.saveButton);
+        database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+
+
 
         if(MedFragment.currentSymptom.getOperation().trim().equals("Select")) {
+            //REMOVE UI NOT USED
             value.setVisibility(View.INVISIBLE);
             placeHolder.setVisibility(View.INVISIBLE);
+            //POPULATE SPINNER
             String[] options= MedFragment.currentSymptom.getOptions().split(",");
             ArrayList<String> arrayListOptions = new ArrayList<>();
             for(String s:options){
@@ -90,15 +97,45 @@ public class SymptomActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(R.layout.list_layout);
             spinner.setAdapter(adapter);
             spinner.setSelection(0);
+
+            //SAVE BUTTON LISTENER
             saveButton.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
                     HTTPost post= new HTTPost();
-                    if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), spinner.getSelectedItem().toString().trim())){
-                        saveButton.setBackgroundColor(Color.GREEN);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    Date date_D = new Date();
+                    String date=(String)(formatter.format(date_D));
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                lastUpdated = String.valueOf(snapshot.getValue(String.class));
+                                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+lastUpdated);
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                    if(lastUpdated.equals("")){
+                        lastUpdated=date;
+                    }
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+                    reference.setValue(date);
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
+                    reference.setValue(spinner.getSelectedItem().toString().trim());
+
+                    if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), spinner.getSelectedItem().toString().trim(),lastUpdated)){
                         Intent intent = new Intent(SymptomActivity.this, Home.class);
                         intent.putExtra("Med",true);
                         startActivity(intent);
+                        saveButton.setBackgroundColor(Color.GREEN);
                     }else{
                         saveButton.setBackgroundColor(Color.RED);
                     }
@@ -111,11 +148,33 @@ public class SymptomActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     HTTPost post= new HTTPost();
-                    if(post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()))){
-                        dateTime = LocalDateTime.now();
-                        date = dateTime.getYear()+""+dateTime.getMonthValue()+""+dateTime.getDayOfMonth()+"";
-                        database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-                        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(date).child(MedFragment.currentSymptom.getName());
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    Date date_D = new Date();
+
+                    String date=(String)(formatter.format(date_D));
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(!flag) {
+                                lastUpdated = String.valueOf(snapshot.getValue(String.class));
+                                flag=true;
+                                System.out.println("VALORE LAST UPDATED SYMPTOM ACTIVITY"+lastUpdated);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                    if(lastUpdated.equals("")){
+                        lastUpdated=date;
+                    }
+
+                    if(post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()),lastUpdated)){
+                        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+                        reference.setValue(date);
+                        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
                         reference.setValue(String.valueOf(value.getText()));
                         saveButton.setBackgroundColor(Color.GREEN);
                         Intent intent = new Intent(SymptomActivity.this, Home.class);
