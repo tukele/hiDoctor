@@ -80,9 +80,6 @@ public class SymptomActivity extends AppCompatActivity {
         symptomDescription.setText(MedFragment.currentSymptom.getDescription().replaceAll("\\W", " ").trim());
         saveButton=(Button) findViewById(R.id.saveButton);
         database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-
-
-
         if(MedFragment.currentSymptom.getOperation().trim().equals("Select")) {
             //REMOVE UI NOT USED
             value.setVisibility(View.INVISIBLE);
@@ -97,95 +94,57 @@ public class SymptomActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(R.layout.list_layout);
             spinner.setAdapter(adapter);
             spinner.setSelection(0);
+        }else{
+            spinner.setVisibility(View.INVISIBLE);
+        }
 
-            //SAVE BUTTON LISTENER
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onClick(View v) {
-                    HTTPost post= new HTTPost();
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    Date date_D = new Date();
-                    String date=(String)(formatter.format(date_D));
-                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
-                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                HTTPost post= new HTTPost();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                Date date_D = new Date();
 
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                lastUpdated = String.valueOf(snapshot.getValue(String.class));
-                                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+lastUpdated);
-
+                String date=(String)(formatter.format(date_D));
+                reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!flag) {
+                            lastUpdated = String.valueOf(snapshot.getValue(String.class));
+                            flag=true;
+                            System.out.println("VALORE LAST UPDATED SYMPTOM ACTIVITY"+lastUpdated);
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-
-                    if(lastUpdated.equals("")){
-                        lastUpdated=date;
                     }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+
+                if(lastUpdated.equals("")){
+                    lastUpdated=date;
+                }
+
+                if(post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()),lastUpdated)){
                     reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
                     reference.setValue(date);
                     reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
-                    reference.setValue(spinner.getSelectedItem().toString().trim());
-
-                    if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), spinner.getSelectedItem().toString().trim(),lastUpdated)){
-                        Intent intent = new Intent(SymptomActivity.this, Home.class);
-                        intent.putExtra("Med",true);
-                        startActivity(intent);
-                        saveButton.setBackgroundColor(Color.GREEN);
-                    }else{
-                        saveButton.setBackgroundColor(Color.RED);
-                    }
+                   if(MedFragment.currentSymptom.getOperation().trim().equals("Select")){
+                       reference.setValue(spinner.getSelectedItem().toString());
+                   }else{
+                       reference.setValue(String.valueOf(value.getText()));
+                   }
+                    reference.setValue(String.valueOf(value.getText()));
+                    saveButton.setBackgroundColor(Color.GREEN);
+                    Intent intent = new Intent(SymptomActivity.this, Home.class);
+                    intent.putExtra("Med",true);
+                    startActivity(intent);
+                }else{
+                    saveButton.setBackgroundColor(Color.RED);
                 }
-            });
-        }else{
-            spinner.setVisibility(View.INVISIBLE);
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onClick(View v) {
-                    HTTPost post= new HTTPost();
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    Date date_D = new Date();
-
-                    String date=(String)(formatter.format(date_D));
-                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(!flag) {
-                                lastUpdated = String.valueOf(snapshot.getValue(String.class));
-                                flag=true;
-                                System.out.println("VALORE LAST UPDATED SYMPTOM ACTIVITY"+lastUpdated);
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-
-                    if(lastUpdated.equals("")){
-                        lastUpdated=date;
-                    }
-
-                    if(post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()),lastUpdated)){
-                        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
-                        reference.setValue(date);
-                        reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
-                        reference.setValue(String.valueOf(value.getText()));
-                        saveButton.setBackgroundColor(Color.GREEN);
-                        Intent intent = new Intent(SymptomActivity.this, Home.class);
-                        intent.putExtra("Med",true);
-                        startActivity(intent);
-                    }else{
-                        saveButton.setBackgroundColor(Color.RED);
-                    }
-                }
-            });
-        }
+            }
+        });
         exitButton=(Button) findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
