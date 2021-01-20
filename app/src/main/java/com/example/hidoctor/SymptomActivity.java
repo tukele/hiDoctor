@@ -21,11 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +41,8 @@ public class SymptomActivity extends AppCompatActivity {
     TextView symptomName;
     Spinner spinner;
     FirebaseDatabase database;
-    DatabaseReference reference;
+    DatabaseReference referenceDate;
+    DatabaseReference referenceValue;
     private ArrayAdapter<String> adapter;
     private View symptomView;
     String lastUpdated="";
@@ -79,7 +80,14 @@ public class SymptomActivity extends AppCompatActivity {
         symptomDescription=(TextView) findViewById(R.id.symptomDescription);
         symptomDescription.setText(MedFragment.currentSymptom.getDescription().replaceAll("\\W", " ").trim());
         saveButton=(Button) findViewById(R.id.saveButton);
+
+
         database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+        HTTPost post= new HTTPost();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date_D = new Date();
+        String date=(String)(formatter.format(date_D));
+        //UI CHANGES
         if(MedFragment.currentSymptom.getOperation().trim().equals("Select")) {
             //REMOVE UI NOT USED
             value.setVisibility(View.INVISIBLE);
@@ -98,53 +106,58 @@ public class SymptomActivity extends AppCompatActivity {
             spinner.setVisibility(View.INVISIBLE);
         }
 
+
+        //SAVE BUTTON LISTENER
         saveButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                HTTPost post= new HTTPost();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                Date date_D = new Date();
-
-                String date=(String)(formatter.format(date_D));
-                reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
-                reference.addValueEventListener(new ValueEventListener() {
+                referenceDate= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim());
+                referenceDate.addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(!flag) {
-                            lastUpdated = String.valueOf(snapshot.getValue(String.class));
-                            flag=true;
-                            System.out.println("VALORE LAST UPDATED SYMPTOM ACTIVITY"+lastUpdated);
-                        }
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        lastUpdated =previousChildName;
+                        System.out.println("HERE WE FUCKING GO BOYS1");
                     }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
 
-                if(lastUpdated.equals("")){
-                    lastUpdated=date;
+                referenceDate.child("Date").setValue(date);
+
+                referenceValue = database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
+                if(MedFragment.currentSymptom.getOperation().trim().equals("Select")) {
+                    referenceValue.setValue(spinner.getSelectedItem().toString().trim());
+                }else {
+                    referenceValue.setValue(String.valueOf(value.getText()));
                 }
 
-                if(post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName(), String.valueOf(value.getText()),lastUpdated)){
-                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
-                    reference.setValue(date);
-                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
-                   if(MedFragment.currentSymptom.getOperation().trim().equals("Select")){
-                       reference.setValue(spinner.getSelectedItem().toString());
-                   }else{
-                       reference.setValue(String.valueOf(value.getText()));
-                   }
-                    reference.setValue(String.valueOf(value.getText()));
-                    saveButton.setBackgroundColor(Color.GREEN);
+                if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), spinner.getSelectedItem().toString().trim(),lastUpdated)){
                     Intent intent = new Intent(SymptomActivity.this, Home.class);
                     intent.putExtra("Med",true);
                     startActivity(intent);
+                    saveButton.setBackgroundColor(Color.GREEN);
                 }else{
                     saveButton.setBackgroundColor(Color.RED);
                 }
             }
         });
+
+
         exitButton=(Button) findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
