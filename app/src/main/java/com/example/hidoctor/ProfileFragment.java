@@ -1,4 +1,5 @@
 package com.example.hidoctor;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -9,9 +10,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,16 +30,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
     //DECLARATION
     FirebaseDatabase database;
     DatabaseReference reference;
-    EditText name;
-    CalendarView calendar;
-    Button salva;
-    String date;
-    LocalDateTime dateTime;
+    private EditText name;
+    private CalendarView calendar;
+    private Button saveButton;
+    private String date;
+    private LocalDateTime dateTime;
+    private Spinner pressSpinner;
+    private Spinner tempSpinner;
+    private ArrayAdapter<String> adapter;
 
     //ONCREATE: NIGHT MODE OFF
     @Override
@@ -55,14 +63,66 @@ public class ProfileFragment extends Fragment {
         // GET CURRENT DATE
         dateTime = LocalDateTime.now();
         date = dateTime.getYear()+""+dateTime.getMonthValue()+""+dateTime.getDayOfMonth()+"";
+        //SPINNER
+        pressSpinner=(Spinner) rootView.findViewById(R.id.pressSpinner);
+        tempSpinner=(Spinner) rootView.findViewById(R.id.tempSpinner);
+        ArrayList<String> arrayListOptions = new ArrayList<>();
+        arrayListOptions.add("09:00");arrayListOptions.add("12:00");arrayListOptions.add("15:00");arrayListOptions.add("18:00");arrayListOptions.add("21:00");arrayListOptions.add("24:00");
+        adapter = new ArrayAdapter<String>(getContext(), R.layout.list_layout, arrayListOptions);
+        adapter.setDropDownViewResource(R.layout.list_layout);
+        tempSpinner.setAdapter(adapter);
+        tempSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Temperature").child(date+tempSpinner.getSelectedItem());
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                        temp.setText(snapshot.getValue(String.class));
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        pressSpinner.setAdapter(adapter);
+        pressSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Pressure").child(date+pressSpinner.getSelectedItem());
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                        temp.setText(snapshot.getValue(String.class));
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         //GET DATABASE REFERENCE
         database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
         //SET PRESSION VALUE IF IT'S IN THE DATABASE
-        reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child(date).child("pressione");
+        reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Pressure").child(date+pressSpinner.getSelectedItem());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                EditText temp = (EditText) rootView.findViewById(R.id.editTextPressione);
                 temp.setText(snapshot.getValue(String.class));
             }
             @Override
@@ -70,11 +130,11 @@ public class ProfileFragment extends Fragment {
             }
         });
         //SET TEMPERATURE VALUE IF IT'S IN THE DATABASE
-        reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child(date).child("temperatura");
+        reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Temperature").child(date+tempSpinner.getSelectedItem());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                EditText temp = (EditText) rootView.findViewById(R.id.editTextTemperatura);
                 temp.setText(snapshot.getValue(String.class));
             }
 
@@ -102,11 +162,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 date = String.valueOf(year) + String.valueOf(month+1) + String.valueOf(dayOfMonth);
-                reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child(date).child("pressione");
+                reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Pressure").child(date+pressSpinner.getSelectedItem());
                 reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    EditText temp = (EditText) getView().findViewById(R.id.editTextPressione);
+                    EditText temp = (EditText) rootView.findViewById(R.id.editTextPressione);
                     temp.setText(snapshot.getValue(String.class));
                         }
                         @Override
@@ -114,11 +174,11 @@ public class ProfileFragment extends Fragment {
                         }
                     });
 
-                reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child(date).child("temperatura");
+                reference = database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Temperature").child(date+tempSpinner.getSelectedItem());
                 reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    EditText temp = (EditText) getView().findViewById(R.id.editTextTemperatura);
+                    EditText temp = (EditText) rootView.findViewById(R.id.editTextTemperatura);
                     temp.setText(snapshot.getValue(String.class));
                     }
                         @Override
@@ -141,37 +201,25 @@ public class ProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
         //IF BUTTON SAVE IS PRESSED DATA ARE PUSHED TO DATABASE
-        salva = (Button) getView().findViewById(R.id.buttonSalva);
-        salva.setOnClickListener(new View.OnClickListener() {
+        saveButton = (Button) getView().findViewById(R.id.buttonSalva);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                Parameters param = new Parameters();
-                param.setPressione(((EditText) getView().findViewById(R.id.editTextPressione)).getText().toString());
-                param.setTemperatura(((EditText) getView().findViewById(R.id.editTextTemperatura)).getText().toString());
-                if (!param.getTemperatura().equals("")&&!param.getPressione().equals("")){
+                String p=(((EditText) getView().findViewById(R.id.editTextPressione)).getText().toString());
+                String t=((EditText) getView().findViewById(R.id.editTextTemperatura)).getText().toString();
+                if (!t.equals("")){
                     database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
-                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child(date);
-                    reference.setValue(param);
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Temperature").child(date+tempSpinner.getSelectedItem());
+                    reference.setValue(t);
+                }
+                if(!p.equals("")){
+                    database= FirebaseDatabase.getInstance("https://hidoctor-dha-default-rtdb.europe-west1.firebasedatabase.app/");
+                    reference= database.getReference().child("User").child(User.currentUser.getId()).child("Parameters").child("Pressure").child(date+pressSpinner.getSelectedItem());
+                    reference.setValue(p);
                 }
             }
         });
     }
-    //DEFAULT FUNCTION DECLARATION
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+
 }

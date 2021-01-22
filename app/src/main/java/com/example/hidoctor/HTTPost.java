@@ -1,9 +1,6 @@
 package com.example.hidoctor;
 import android.os.AsyncTask;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -23,9 +20,6 @@ public class HTTPost extends AsyncTask {
     private static final String CALL_URL = "http://hidoctor.shardslab.com/Api/getCallCode";
     private static final String DOCTOR_URL = "http://hidoctor.shardslab.com/Api/getDoctorPerPatient";
     private static final String HL7_URL = "http://hidoctor.shardslab.com/loadHL7";
-    //DATABASE
-    FirebaseDatabase database;
-    DatabaseReference reference;
     //OKHTTPCLIENT
     private final OkHttpClient client = new OkHttpClient();
     //DATA POST: REQUESTBODY AND URL
@@ -92,21 +86,20 @@ public class HTTPost extends AsyncTask {
         return "";
     }
     //SEND HL7 MESSAGE TO WEBSERVER
-    public boolean HL7_HTTP(String id,String symptom,String value,String lastUpdated){
+    public boolean HL7_HTTP(String id,String symptom,String value){
         if(value.equals("")){
             return false;
         }
-        System.out.println("LASTUPDATED NELLHLT IDOWAIJDOIDJWA"+lastUpdated);
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date_D = new Date();
         String date=(String)(formatter.format(date_D));
-
 
         String HL7="{\n" +
                 "  \"resourceType\" : \"ValueSet\",\n" +
                 "  \"id\" : \"condition-category\",\n" +
                 "  \"meta\" : {\n" +
-                "    \"lastUpdated\" : \""+lastUpdated+"\",\n" +
+                "    \"lastUpdated\" : \"\",\n" +
                 "    \"profile\" : [\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]\n" +
                 "  },\n" +
                 "  \"text\" : {\n" +
@@ -172,7 +165,6 @@ public class HTTPost extends AsyncTask {
         }
         return false;
     }
-
     //HTTP POST, ASYNCTASK METHOD
     @Override
     protected Object doInBackground(Object[] objects) {

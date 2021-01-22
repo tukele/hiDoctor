@@ -21,9 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -70,6 +67,7 @@ public class SymptomActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         System.out.println(MedFragment.currentSymptom.getOperation());
         spinner = (Spinner) findViewById(R.id.spinner);
         value=(EditText) findViewById(R.id.value);
@@ -112,48 +110,32 @@ public class SymptomActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                referenceDate= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim());
-                referenceDate.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        lastUpdated =previousChildName;
-                        System.out.println("HERE WE FUCKING GO BOYS1");
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
-
-                referenceDate.child("Date").setValue(date);
-
+                referenceDate= database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Date");
+                referenceDate.setValue(date);
                 referenceValue = database.getReference().child("User").child(User.currentUser.getId()).child("Symptoms").child(MedFragment.currentSymptom.getName().trim()).child("Value");
                 if(MedFragment.currentSymptom.getOperation().trim().equals("Select")) {
                     referenceValue.setValue(spinner.getSelectedItem().toString().trim());
+
+                    if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), spinner.getSelectedItem().toString().trim())){
+                        Intent intent = new Intent(SymptomActivity.this, Home.class);
+                        intent.putExtra("Med",true);
+                        startActivity(intent);
+                        saveButton.setBackgroundColor(Color.GREEN);
+                    }else{
+                        saveButton.setBackgroundColor(Color.RED);
+                    }
                 }else {
                     referenceValue.setValue(String.valueOf(value.getText()));
+                    if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), String.valueOf(value.getText()))){
+                        Intent intent = new Intent(SymptomActivity.this, Home.class);
+                        intent.putExtra("Med",true);
+                        startActivity(intent);
+                        saveButton.setBackgroundColor(Color.GREEN);
+                    }else{
+                        saveButton.setBackgroundColor(Color.RED);
+                    }
                 }
 
-                if( post.HL7_HTTP(User.currentUser.getId(),MedFragment.currentSymptom.getName().trim(), spinner.getSelectedItem().toString().trim(),lastUpdated)){
-                    Intent intent = new Intent(SymptomActivity.this, Home.class);
-                    intent.putExtra("Med",true);
-                    startActivity(intent);
-                    saveButton.setBackgroundColor(Color.GREEN);
-                }else{
-                    saveButton.setBackgroundColor(Color.RED);
-                }
             }
         });
 

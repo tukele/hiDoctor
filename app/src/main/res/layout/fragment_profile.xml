@@ -20,10 +20,10 @@
         app:backgroundTint="#7986CB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.661"
+        app:layout_constraintHorizontal_bias="0.894"
         app:layout_constraintStart_toStartOf="@+id/calendarView"
         app:layout_constraintTop_toBottomOf="@+id/editTextPressione"
-        app:layout_constraintVertical_bias="0.355" />
+        app:layout_constraintVertical_bias="0.504" />
 
     <CalendarView
         android:id="@+id/calendarView"
@@ -39,7 +39,8 @@
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout"
-        app:layout_constraintVertical_bias="0.051" />
+        app:layout_constraintVertical_bias="0.051"
+        />
 
     <EditText
         android:id="@+id/layout"
@@ -79,10 +80,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
+        app:layout_constraintHorizontal_bias="0.062"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintVertical_bias="0.058" />
 
     <TextView
         android:id="@+id/labelPressione"
@@ -96,40 +97,68 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/labelTemperatura"
         app:layout_constraintVertical_bias="0.158" />
 
     <EditText
         android:id="@+id/editTextPressione"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="69dp"
+        android:layout_height="48dp"
         android:background="#8C9EFF"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.156"
+        app:layout_constraintHorizontal_bias="0.022"
         app:layout_constraintStart_toEndOf="@+id/labelPressione"
         app:layout_constraintTop_toBottomOf="@+id/editTextTemperatura"
-        app:layout_constraintVertical_bias="0.195" />
+        app:layout_constraintVertical_bias="0.192" />
 
     <EditText
         android:id="@+id/editTextTemperatura"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="69dp"
+        android:layout_height="49dp"
         android:background="#8C9EFF"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.156"
+        app:layout_constraintHorizontal_bias="0.011"
         app:layout_constraintStart_toEndOf="@+id/labelTemperatura"
         app:layout_constraintTop_toBottomOf="@+id/calendarView"
-        app:layout_constraintVertical_bias="0.089" />
+        app:layout_constraintVertical_bias="0.092" />
+
+    <Spinner
+        android:id="@+id/tempSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginTop="27dp"
+        app:layout_constraintBottom_toTopOf="@+id/pressSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintStart_toEndOf="@+id/editTextTemperatura"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Spinner
+        android:id="@+id/pressSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSalva"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintStart_toEndOf="@+id/editTextPressione"
+        app:layout_constraintTop_toTopOf="@+id/editTextPressione"
+        app:layout_constraintVertical_bias="0.09" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
